@@ -12,7 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ ubuntu-22.04 ]
+        #os: [ macos-latest, ubuntu-latest, windows-latest ]
 
     steps:
       - name: Check out Git repository
@@ -28,7 +29,7 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install npm packages 
+      - name: Install npm packages
         run: make install
 
       - name: ESLint
@@ -52,3 +53,25 @@ jobs:
               npx electron-builder --win --x64 --arm64 --publish never
               ;;
           esac
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v3
+        with:
+          name: netron.AppImage
+          path: ./dist/*.AppImage
+          #path: ./dist/Netron-5.5.0.AppImage
+
+      - name: Upload snap
+        uses: actions/upload-artifact@v3
+        with:
+          name: netron.snap
+          path: |
+            ./dist/*.snap
+            #./dist/netron_5.5.0_amd64.snap
+
+      - name: Upload whl
+        uses: actions/upload-artifact@v3
+        with:
+          name: netron.whl
+          path: ./dist/dist/*.whl
+          #path: ./dist/dist/netron-5.5.0-py2.py3-none-any.whl
